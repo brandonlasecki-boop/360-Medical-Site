@@ -23,7 +23,7 @@ export async function POST(request) {
     }
 
     const { data, error } = await resend.emails.send({
-      from: "360 Medical Contact Form <onboarding@resend.dev>",
+      from: "360 Medical Contact Form <contact@360medical.net>",
       to: "info@360medical.net",
       replyTo: email,
       subject: subject ? `Contact: ${subject}` : `Contact form submission from ${name}`,
