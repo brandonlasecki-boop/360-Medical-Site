@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 
 const ContactForm = () => {
   const [status, setStatus] = useState("idle"); // idle | loading | success | error
+  const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -21,6 +22,7 @@ const ContactForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus("loading");
+    setErrorMessage("");
 
     try {
       const res = await fetch("/api/contact", {
@@ -32,12 +34,15 @@ const ContactForm = () => {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || "Something went wrong");
+        setErrorMessage(data.error || "Something went wrong");
+        setStatus("error");
+        return;
       }
 
       setStatus("success");
       setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
     } catch (err) {
+      setErrorMessage("Network error. Please check your connection and try again.");
       setStatus("error");
     }
   };
@@ -187,7 +192,7 @@ const ContactForm = () => {
             )}
             {status === "error" && (
               <p className="text-sm text-red-600 bg-red-50 py-2 px-3 rounded">
-                Something went wrong. Please try again or email us directly at info@360medical.net.
+                {errorMessage || "Something went wrong. Please try again or email us directly at info@360medical.net."}
               </p>
             )}
 
